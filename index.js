@@ -227,7 +227,7 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
     const GST = price * (GST_RATE / 100);
     
     TotalCost+=price + GST;
-    products.push({PID:product._id,Unit:product.quantity})
+    products.push({PID:product._id,ProductName:product.name,ProductPrice:product.price,GST:GST_RATE,Unit:product.quantity})
  
 
   }
@@ -554,29 +554,46 @@ app.post("/api/retriveTransactions",async(req,res)=>{
     console.log(error)
     res.status(500).json({message:"internal server error"})
   }
+  
+})
+
+
+app.post("/api/getTransactionsById",async(req,res)=>{
+  const clientData = req.body;
+  try {
+    const Data = await transactionModel.findById(clientData.Id);
+    if(Data){
+      res.status(200).json({D:Data});
+    }else{
+      res.status(404).json({message:"didnt find it!"})
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:"internal server error"})
+  }
 })
 
 
 // ⚠️ EXTREMELY DANGEROUS CODE!!! CAN DEL EVERYTHING IN DB!! ⚠️
 
 // ================================================================
-// app.get("/fuckEverything",async(req,res)=>{
-//   try {
-//     await transactionModel.deleteMany({});
-//     await CustomerModel.deleteMany({});
+app.get("/fuckEverything",async(req,res)=>{
+  try {
+    await transactionModel.deleteMany({});
+    await CustomerModel.deleteMany({});
     
-//     await ProductModel.updateMany(
-//       {},
-//       {
+    await ProductModel.updateMany(
+      {},
+      {
       
-//         Sales_History:[],
-//       }
-//     )
-//     res.send("DONE FUCKING!")
-//   } catch (error) {
-//     console.log(error)
-//   }
-// })
+        Sales_History:[],
+      }
+    )
+    res.send("DONE FUCKING!")
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 // ⚠️ =============================================================== ⚠️ END OF DANGER!!
 
