@@ -240,6 +240,7 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
     NetAmt:TotalCost,
     Y:today.getFullYear(),
     M:today.getMonth()+1,
+    D:today.getDay(),
     ProductList: products,
     Credit:ClientData.CreditAmount
   }
@@ -538,27 +539,42 @@ app.post("/api/CustomerCheck", async (req, res) => {
 });
 
 
+app.post("/api/retriveTransactions",async(req,res)=>{
+  const ClientData = req.body;
+  try {
+    const Data = await transactionModel.find({Y:ClientData.Year,M:ClientData.Month,D:ClientData.Day})
+    if(Data){
+      res.status(200).json({data:Data});
+    }else{
+      res.status(404).json({message:"didnt find it!"})
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:"internal server error"})
+  }
+})
+
 
 // ⚠️ EXTREMELY DANGEROUS CODE!!! CAN DEL EVERYTHING IN DB!! ⚠️
 
 // ================================================================
-app.get("/fuckEverything",async(req,res)=>{
-  try {
-    await transactionModel.deleteMany({});
-    await CustomerModel.deleteMany({});
+// app.get("/fuckEverything",async(req,res)=>{
+//   try {
+//     await transactionModel.deleteMany({});
+//     await CustomerModel.deleteMany({});
     
-    await ProductModel.updateMany(
-      {},
-      {
+//     await ProductModel.updateMany(
+//       {},
+//       {
       
-        Sales_History:[],
-      }
-    )
-    res.send("DONE FUCKING!")
-  } catch (error) {
-    console.log(error)
-  }
-})
+//         Sales_History:[],
+//       }
+//     )
+//     res.send("DONE FUCKING!")
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })
 
 // ⚠️ =============================================================== ⚠️ END OF DANGER!!
 

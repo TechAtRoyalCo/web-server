@@ -5,6 +5,7 @@ const TransactionModelSchema = new mongoose.Schema({
     NetAmt: Number,
     Y: Number,
     M: Number,
+    D:Number,
     ProductList:Array,
     Credit:Number
 });
