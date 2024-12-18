@@ -240,11 +240,12 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
     NetAmt:TotalCost,
     Y:today.getFullYear(),
     M:today.getMonth()+1,
-    D:today.getDay(),
+    D:today.getDate(),
     ProductList: products,
     Credit:ClientData.CreditAmount
   }
 
+  
 
   //Task 1: Add Data in Transaction Model With Credit Check.
   try {
@@ -543,8 +544,9 @@ app.post("/api/retriveTransactions",async(req,res)=>{
   const ClientData = req.body;
   try {
     const Data = await transactionModel.find({Y:ClientData.Year,M:ClientData.Month,D:ClientData.Day})
+    console.log(Data)
     if(Data){
-      res.status(200).json({data:Data});
+      res.status(200).json({D:Data});
     }else{
       res.status(404).json({message:"didnt find it!"})
     }
