@@ -35,6 +35,7 @@ mongoose
 import ProductModel from './models/productModel.js';
 import CustomerModel from "./models/customerModel.js"
 import transactionModel from './models/transactionModel.js';
+import productModel from './models/productModel.js';
 // Middleware setup
 app.use(cors());
 app.use(bodyParser.json());
@@ -95,7 +96,7 @@ app.get("/api/getAllProduct",async(req,res)=>{
 
 app.post("/api/auth", async (req, res) => {
   const ClientData = req.body;
-  
+  console.log(ClientData)
   try {
     // Check if the user with this phone number already exists
     const data = await CustomerModel.find({ Phone: ClientData.Phone });
@@ -109,6 +110,7 @@ app.post("/api/auth", async (req, res) => {
         Name: ClientData.Name,
         Email: ClientData.Email,
         Phone: ClientData.Phone,
+        GST_NUM:ClientData.GST,
         Purchase_History: [],
       });
       
@@ -534,6 +536,31 @@ app.post("/api/CustomerCheck", async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+
+// ⚠️ EXTREMELY DANGEROUS CODE!!! CAN DEL EVERYTHING IN DB!! ⚠️
+
+// ================================================================
+app.get("/fuckEverything",async(req,res)=>{
+  try {
+    await transactionModel.deleteMany({});
+    await CustomerModel.deleteMany({});
+    
+    await ProductModel.updateMany(
+      {},
+      {
+      
+        Sales_History:[],
+      }
+    )
+    res.send("DONE FUCKING!")
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+// ⚠️ =============================================================== ⚠️ END OF DANGER!!
 
 // Start server
 app.listen(port, () => {

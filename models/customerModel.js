@@ -15,6 +15,7 @@ const customerSchema = new Schema(
   {
    Name: { type: String },  // Customer's name
     Email: { type: String, unique: true },  // Customer's email
+    GST_NUM:{type:String},
     Phone: { type: String, unique: true },  // Customer's phone number
     Purchase_History: [purchaseHistorySchema],  // Array of purchase history objects
   },
