@@ -318,7 +318,6 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
       res.status(500).json({message:"Error Updating Product Profile!"})
      }
   }
-console.log(transactionData)
   //if it came till here it means we are successfull!!!
   res.status(200).json({message:"Success",Data:transactionData})
 
