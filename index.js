@@ -231,6 +231,7 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
  
 
   }
+  let transactionData;
 
 
 
@@ -245,11 +246,10 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
     Credit:ClientData.CreditAmount
   }
 
-  
 
   //Task 1: Add Data in Transaction Model With Credit Check.
   try {
-    await transactionModel.create(TransactionModelData);
+    transactionData = await transactionModel.create(TransactionModelData);
 
   } catch (error) {
     console.log(error)
@@ -318,9 +318,9 @@ app.post("/api/FinalTransactionApi",async(req,res)=>{
       res.status(500).json({message:"Error Updating Product Profile!"})
      }
   }
-
+console.log(transactionData)
   //if it came till here it means we are successfull!!!
-  res.status(200).json({message:"Success"})
+  res.status(200).json({message:"Success",Data:transactionData})
 
 })
 
@@ -574,26 +574,42 @@ app.post("/api/getTransactionsById",async(req,res)=>{
 })
 
 
+app.post("/api/getCustomerById",async(req,res)=>{
+  const clientData = req.body;
+  try {
+    const Data = await CustomerModel.findById(clientData.Id);
+    if(Data){
+      res.status(200).json({D:Data});
+    }else{
+      res.status(404).json({message:"didnt find it!"})
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:"internal server error"})
+  }
+})
+
+
 // ⚠️ EXTREMELY DANGEROUS CODE!!! CAN DEL EVERYTHING IN DB!! ⚠️
 
 // ================================================================
-app.get("/fuckEverything",async(req,res)=>{
-  try {
-    await transactionModel.deleteMany({});
-    await CustomerModel.deleteMany({});
+// app.get("/fuckEverything",async(req,res)=>{
+//   try {
+//     await transactionModel.deleteMany({});
+//     await CustomerModel.deleteMany({});
     
-    await ProductModel.updateMany(
-      {},
-      {
+//     await ProductModel.updateMany(
+//       {},
+//       {
       
-        Sales_History:[],
-      }
-    )
-    res.send("DONE FUCKING!")
-  } catch (error) {
-    console.log(error)
-  }
-})
+//         Sales_History:[],
+//       }
+//     )
+//     res.send("DONE FUCKING!")
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })
 
 // ⚠️ =============================================================== ⚠️ END OF DANGER!!
 
